@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["allcode"]
+
+[project]
+name = "pyallcode"
+version = "0.0.3"
+license = {file="LICENSE"}
+requires-python = ">-3.8"
+dependencies = [
+    "pyserial >=3.5",
+]
+authors = [
+    { name="Bill Crawford", email="bill.crawford@forthvalley.ac.uk"}
+]
+maintainers = [
+    { name="Bill Crawford", email="bill.crawford@forthvalley.ac.uk"}
+]
+description = "Object orientated python API for MatrixTSL Allcode."
+readme = "README.md"
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Students",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = [
+    "MatrixTSL",
+    "Allcode",
+    "API",
+    "Python",
+    "Serial",
+    "Communication",
+]
