@@ -1,4 +1,4 @@
-# Allcode API
+# pyAllcode API
 
 The Allcode API is a python library of methods used to control Matrix Tsl allcode devices over a bluetooth serial connection. Based on the original formula allcode api provded by Matrix Tsl, this library has been redesigned from the ground up.
 
