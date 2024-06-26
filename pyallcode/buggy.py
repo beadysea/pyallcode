@@ -1,17 +1,17 @@
 """Matrix TSL Buggy API."""
 
-from allcode.devices.axis import Axes
-from allcode.devices.buttons import Buttons
-from allcode.devices.ir_sensors import IRSensors
-from allcode.devices.lcd import LCD
-from allcode.devices.leds import LEDs
-from allcode.devices.light_sensor import LightSensor
-from allcode.devices.line_sensors import LineSensors
-from allcode.devices.mic import Mic
-from allcode.devices.sd_card import SDCard
-from allcode.devices.servos import Servos
-from allcode.devices.speaker import Speaker
-from allcode.serial_comms import CommunicationDevice
+from .devices.axis import Axes
+from .devices.buttons import Buttons
+from .devices.ir_sensors import IRSensors
+from .devices.lcd import LCD
+from .devices.leds import LEDs
+from .devices.light_sensor import LightSensor
+from .devices.line_sensors import LineSensors
+from .devices.mic import Mic
+from .devices.sd_card import SDCard
+from .devices.servos import Servos
+from .devices.speaker import Speaker
+from .serial_comms import CommunicationDevice
 
 # MAX and MIN Constants
 MIN_ANGLE = 0

@@ -1,5 +1,5 @@
-from allcode.enums import BitDepth, SampleRate
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.enums import BitDepth, SampleRate
+from pyallcode.serial_comms import CommunicationDevice
 
 
 MIN_SD_BYTE = 0
@@ -18,7 +18,7 @@ class SDCard:
         Returns:
             int: Status 0 (OK), 254 (error) or 255 (no card)
         """
-        command = 'CardInit\n'
+        command = "CardInit\n"
         return self.device.send_message(command)
 
     def create_file(self, filename: str) -> int:
@@ -31,7 +31,7 @@ class SDCard:
             int: Status 0 (OK), 1 (file exists) or 255 (error)
 
         """
-        command = f'CardCreate {filename}\n'
+        command = f"CardCreate {filename}\n"
         return self.device.send_message(command)
 
     def open_file(self, filename: str) -> int:
@@ -43,7 +43,7 @@ class SDCard:
         Returns:
             int: Status 0 (OK), 239 (file not found) or 255 (error)
         """
-        command = f'CardOpen {filename}\n'
+        command = f"CardOpen {filename}\n"
         return self.device.send_message(command)
 
     def delete_file(self, filename: str) -> int:
@@ -55,7 +55,7 @@ class SDCard:
         Returns:
             int: Status 0 (OK) or 255 (error)
         """
-        command = f'CardDelete {filename}\n'
+        command = f"CardDelete {filename}\n"
         return self.device.send_message(command)
 
     def write_byte(self, data: int) -> int:
@@ -72,8 +72,11 @@ class SDCard:
         """
         if data < MIN_SD_BYTE or data > MAX_SD_BYTE:
             raise ValueError(
-                f'Invalid data {data}. data value must be in the range {MIN_SD_BYTE} to {MAX_SD_BYTE}.')
-        command = f'CardWriteByte {data}\n'
+                "Invalid data {data}. data value must be in the range {MIN_SD_BYTE} to {MAX_SD_BYTE}.".format(
+                    data=data, MIN_SD_BYTE=MIN_SD_BYTE, MAX_SD_BYTE=MAX_SD_BYTE
+                )
+            )
+        command = f"CardWriteByte {data}\n"
         return self.device.send_message(command)
 
     def read_byte(self) -> int:
@@ -82,10 +85,12 @@ class SDCard:
         Returns:
             int: the value of the data byte.
         """
-        command = f'CardReadByte\n'
+        command = "CardReadByte\n"
         return self.device.send_message(command)
 
-    def record_mic(self, bitdepth: BitDepth, samplerate: SampleRate, time: int, filename: str) -> int:
+    def record_mic(
+        self, bitdepth: BitDepth, samplerate: SampleRate, time: int, filename: str
+    ) -> int:
         """Records digital audio from the microphone to the given SD Card file.
 
         Args:
@@ -102,8 +107,14 @@ class SDCard:
         """
         if time < MIN_RECORD_TIME or time > MAX_RECORD_TIME:
             raise ValueError(
-                f'Invalid time: {time} seconds. time must be in the range {MIN_RECORD_TIME} to {MAX_RECORD_TIME} seconds.')
-        command = f'CardRecordMic {bitdepth} {samplerate} {time} {filename}\n'
+                "Invalid time: {time} seconds. "
+                "time must be in the range {MIN_RECORD_TIME} to {MAX_RECORD_TIME} seconds.".format(
+                    time=time,
+                    MIN_RECORD_TIME=MIN_RECORD_TIME,
+                    MAX_RECORD_TIME=MAX_RECORD_TIME,
+                )
+            )
+        command = f"CardRecordMic {bitdepth} {samplerate} {time} {filename}\n"
         return self.device.send_message(command)
 
     def playback(self, filename: str) -> int:
@@ -115,5 +126,5 @@ class SDCard:
         Returns:
             int: Status 0 (OK), 239 (file not found) or 255 (error)
         """
-        command = f'CardPlayBack {filename}\n'
+        command = f"CardPlayBack {filename}\n"
         return self.device.send_message(command)

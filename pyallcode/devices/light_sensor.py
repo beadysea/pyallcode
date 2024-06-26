@@ -1,5 +1,4 @@
-
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.serial_comms import CommunicationDevice
 
 
 class LightSensor:
@@ -12,5 +11,5 @@ class LightSensor:
         Returns:
             int: the value of the light sensor.
         """
-        command = 'ReadLight\n'
+        command = "ReadLight\n"
         return self.device.send_message(command)

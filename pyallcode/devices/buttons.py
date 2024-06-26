@@ -1,6 +1,5 @@
-
-from allcode.enums import Button
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.enums import Button
+from pyallcode.serial_comms import CommunicationDevice
 
 
 class Buttons:
@@ -16,7 +15,7 @@ class Buttons:
         Returns:
             bool: State of the given button
         """
-        command = f'ReadSwitch {button.value}\n'
+        command = f"ReadSwitch {button.value}\n"
         value = self.device.send_message(command)
         if value == 1:
             return True

@@ -1,12 +1,12 @@
-from allcode.enums import Colour
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.enums import Colour
+from pyallcode.serial_comms import CommunicationDevice
 
 MIN_LCD_X = 0
-MAX_LCD_X = 128
+MAX_LCD_X = 127
 MIN_LCD_Y = 0
-MAX_LCD_Y = 32
+MAX_LCD_Y = 31
 MIN_LCD_BRIGHTNESS = 0
-MAX_LCD_BRIGHTNESS = 101
+MAX_LCD_BRIGHTNESS = 100
 
 
 class LCD:
@@ -16,7 +16,7 @@ class LCD:
 
     def clear(self):
         """Clears the LCD screen."""
-        command = 'LCDClear\n'
+        command = "LCDClear\n"
         self.device.send_message(command)
 
     def display_text(self, x: int, y: int, text: str):
@@ -30,14 +30,20 @@ class LCD:
         Raises:
             ValueError: when the x or y co-ordinates are out of range.
         """
-        if x not in range(MIN_LCD_X, MAX_LCD_X):
+        if x not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x=x, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
+                "Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y=y, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
 
-        command = f'LCDPrint {x} {y} {text}\n'
+        command = f"LCDPrint {x} {y} {text}\n"
         self.device.send_message(command)
 
     def display_int(self, x: int, y: int, value: int):
@@ -51,14 +57,20 @@ class LCD:
         Raises:
             ValueError: when the x or y co-ordinate is out of range.
         """
-        if x not in range(MIN_LCD_X, MAX_LCD_X):
+        if x not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x=x, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
+                "Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y=y, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
 
-        command = f'LCDNumber {x} {y} {value}\n'
+        command = f"LCDNumber {x} {y} {value}\n"
         self.device.send_message(command)
 
     def plot_pixel(self, x: int, y: int):
@@ -71,14 +83,20 @@ class LCD:
         Raises:
             ValueError: when the x or y co-ordinate is out of range.
         """
-        if x not in range(MIN_LCD_X, MAX_LCD_X):
+        if x not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x=x, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
+                "Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y=y, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
 
-        command = f'LCDPixel {x} {y} 1\n'
+        command = f"LCDPixel {x} {y} 1\n"
         self.device.send_message(command)
 
     def clear_pixel(self, x: int, y: int):
@@ -91,14 +109,20 @@ class LCD:
         Raises:
             ValueError: when the x or y co-ordinate is out of range.
         """
-        if x not in range(MIN_LCD_X, MAX_LCD_X):
+        if x not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
+                "Invalid x value {x}. x value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x=x, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
         if y < MIN_LCD_Y or y > MAX_LCD_Y:
             raise ValueError(
-                f'Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
+                "Invalid y value {y}. y value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y=y, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
 
-        command = f'LCDPixel {x} {y} 0\n'
+        command = f"LCDPixel {x} {y} 0\n"
         self.device.send_message(command)
 
     def draw_line(self, x1: int, y1: int, x2: int, y2: int):
@@ -113,19 +137,31 @@ class LCD:
         Raises:
             ValueError: when any x or y co-ordinate is out of range.
         """
-        if x1 not in range(MIN_LCD_X, MAX_LCD_X):
+        if x1 not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x1 value {x1}. x1 value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y1 not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x1 value {x1}. x1 value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x1=x1, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y1 not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y1 value {y1}. y1 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
-        if x2 not in range(MIN_LCD_X, MAX_LCD_X):
+                "Invalid y1 value {y1}. y1 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y1=y1, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
+        if x2 not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x2 value {x2}. x2 value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y2 not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x2 value {x2}. x2 value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x2=x2, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y2 not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y2 value {y2}. y2 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
-        command = f'LCDLine {x1} {y1} {x2} {y2}\n'
+                "Invalid y2 value {y2}. y2 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y2=y2, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
+        command = f"LCDLine {x1} {y1} {x2} {y2}\n"
         self.device.send_message(command)
 
     def draw_rectangle(self, x1: int, y1: int, x2: int, y2: int):
@@ -140,19 +176,31 @@ class LCD:
         Raises:
             ValueError: when any x or y co-ordinate is out of range.
         """
-        if x1 not in range(MIN_LCD_X, MAX_LCD_X):
+        if x1 not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x1 value {x1}. x1 value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y1 not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x1 value {x1}. x1 value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x1=x1, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y1 not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y1 value {y1}. y1 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
-        if x2 not in range(MIN_LCD_X, MAX_LCD_X):
+                "Invalid y1 value {y1}. y1 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y1=y1, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
+        if x2 not in range(MIN_LCD_X, MAX_LCD_X + 1):
             raise ValueError(
-                f'Invalid x2 value {x2}. x2 value must be in the range {MIN_LCD_X} to {MAX_LCD_X-1}.')
-        if y2 not in range(MIN_LCD_Y, MAX_LCD_Y):
+                "Invalid x2 value {x2}. x2 value must be in the range {MIN_LCD_X} to {MAX_LCD_X}.".format(
+                    x2=x2, MIN_LCD_X=MIN_LCD_X, MAX_LCD_X=MAX_LCD_X
+                )
+            )
+        if y2 not in range(MIN_LCD_Y, MAX_LCD_Y + 1):
             raise ValueError(
-                f'Invalid y2 value {y2}. y2 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y-1}.')
-        command = f'LCDRect {x1} {y1} {x2} {y2}\n'
+                "Invalid y2 value {y2}. y2 value must be in the range {MIN_LCD_Y} to {MAX_LCD_Y}.".format(
+                    y2=y2, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
+                )
+            )
+        command = f"LCDRect {x1} {y1} {x2} {y2}\n"
         self.device.send_message(command)
 
     def display_bitmap(self, x: int, y: int, filename: str) -> int:
@@ -164,9 +212,9 @@ class LCD:
             filename (str): a bitmap file.
 
         Returns:
-            int: 
+            int:
         """
-        command = f'CardBitmap {x} {y} {filename}\n'
+        command = f"CardBitmap {x} {y} {filename}\n"
         return self.device.send_message(command)
 
     def backlight_brightness(self, brightness: int):
@@ -178,11 +226,17 @@ class LCD:
         Raises:
             ValueError: when the brightness is out of range.
         """
-        if brightness not in range(MIN_LCD_BRIGHTNESS, MAX_LCD_BRIGHTNESS):
+        if brightness not in range(MIN_LCD_BRIGHTNESS, MAX_LCD_BRIGHTNESS + 1):
             raise ValueError(
-                f'Invalid brightness value {brightness}. Brightness must be in the range {MIN_LCD_BRIGHTNESS} to {MAX_LCD_BRIGHTNESS-1}.')
+                "Invalid brightness value {brightness}. "
+                "Brightness must be in the range {MIN_LCD_BRIGHTNESS} to {MAX_LCD_BRIGHTNESS}.".format(
+                    brightness=brightness,
+                    MIN_LCD_BRIGHTNESS=MIN_LCD_BRIGHTNESS,
+                    MAX_LCD_BRIGHTNESS=MAX_LCD_BRIGHTNESS,
+                )
+            )
 
-        command = f'LCDBacklight {brightness}\n'
+        command = f"LCDBacklight {brightness}\n"
         self.device.send_message(command)
 
     def options(self, foreground: Colour, background: Colour, transparent: bool):
@@ -194,7 +248,7 @@ class LCD:
             transparent (bool): Transparency of the LCD screen
         """
         if transparent:
-            command = f'LCDOptions {foreground.value} {background.value} 1\n'
+            command = f"LCDOptions {foreground.value} {background.value} 1\n"
         else:
-            command = f'LCDOptions {foreground.value} {background.value} 0\n'
+            command = f"LCDOptions {foreground.value} {background.value} 0\n"
         self.device.send_message(command)

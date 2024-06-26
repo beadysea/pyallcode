@@ -1,5 +1,5 @@
-from allcode.enums import LineSensor
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.enums import LineSensor
+from pyallcode.serial_comms import CommunicationDevice
 
 
 class LineSensors:
@@ -15,5 +15,5 @@ class LineSensors:
         Returns:
             int: the value of the line sensor.
         """
-        command = f'ReadLine {line_sensor.value}\n'
+        command = f"ReadLine {line_sensor.value}\n"
         return self.device.send_message(command)

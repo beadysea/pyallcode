@@ -1,6 +1,5 @@
-
-from allcode.enums import Axis
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.enums import Axis
+from pyallcode.serial_comms import CommunicationDevice
 
 
 class Axes:
@@ -16,5 +15,5 @@ class Axes:
         Returns:
             int: The value of the given axis.
         """
-        command = f'ReadAxis {axis.value}\n'
+        command = f"ReadAxis {axis.value}\n"
         return self.device.send_message(command)

@@ -1,4 +1,4 @@
-from allcode.serial_comms import CommunicationDevice
+from pyallcode.serial_comms import CommunicationDevice
 
 
 class Mic:
@@ -11,5 +11,5 @@ class Mic:
         Returns:
             int: the value of the microphone.
         """
-        command = 'ReadMic\n'
+        command = "ReadMic\n"
         return self.device.send_message(command)
