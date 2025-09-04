@@ -30,5 +30,4 @@ class IRSensors:
                 )
             )
 
-        command = f"ReadIR {sensor}\n"
-        return self.device.send_message(command)
+        return self.device.send_message(f"ReadIR {sensor}\n")

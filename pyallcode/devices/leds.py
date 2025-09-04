@@ -27,8 +27,7 @@ class LEDs:
                     MAX_LED_VALUE=MAX_LED_VALUE,
                 )
             )
-        command = f"LEDWrite {value}"
-        self.device.send_message(command)
+        self.device.send_message(f"LEDWrite {value}")
 
     def on(self, led: int):
         """Switches the given LED on.
@@ -47,8 +46,7 @@ class LEDs:
                     MAX_LED=MAX_LED,
                 )
             )
-        command = f"LEDOn {led}"
-        self.device.send_message(command)
+        self.device.send_message(f"LEDOn {led}")
 
     def off(self, led: int):
         """Switches the given LED off.
@@ -67,5 +65,4 @@ class LEDs:
                     MAX_LED=MAX_LED,
                 )
             )
-        command = f"LEDOff {led}"
-        self.device.send_message(command)
+        self.device.send_message(f"LEDOff {led}")

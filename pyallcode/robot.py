@@ -1,7 +1,7 @@
-"""Matrix TSL Buggy API."""
+"""Matrix TSL robot API."""
 
 from .devices.axis import Axes
-from .devices.buttons import Buttons
+from .devices.push_buttons import PushButtons
 from .devices.ir_sensors import IRSensors
 from .devices.lcd import LCD
 from .devices.leds import LEDs
@@ -22,11 +22,13 @@ MIN_SPEED = -100
 MAX_SPEED = 100
 
 
-class Buggy:
+class Robot:
+    """_summary_"""
+
     def __init__(self, device: CommunicationDevice) -> None:
         self.device = device
         self.axis = Axes(self.device)
-        self.buttons = Buttons(self.device)
+        self.push_buttons = PushButtons(self.device)
         self.ir_sensors = IRSensors(self.device)
         self.lcd = LCD(self.device)
         self.leds = LEDs(self.device)
@@ -40,22 +42,20 @@ class Buggy:
     # system methods
 
     def api_version(self):
-        """Returns the API version of the allcode buggy"""
-        command = "GetAPIVersion\n"
-        return self.device.send_message(command)
+        """Returns the API version of the allcode robot."""
+        return self.device.send_message("GetAPIVersion\n")
 
     def battery_voltage(self) -> float:
         """Returns the battery voltage."""
-        command = "GetBattery\n"
-        value = self.device.send_message(command)
+        value: int = self.device.send_message("GetBattery\n")
         return value / 100
 
     # motor methods
     def forward(self, distance: int) -> None:
-        """Moves the buggy forward by the given distance.
+        """Moves the robot forward by the given distance.
 
         Args:
-            distance (int): distance between 0 and 1000 mm
+            distance: distance between 0 and 1000 mm
 
         Raises:
             ValueError: when distance is out of range
@@ -64,11 +64,10 @@ class Buggy:
             raise ValueError(
                 f"Invalid distance {distance}mm. Distance must be between {MIN_DISTANCE} and {MAX_DISTANCE} mm"
             )
-        command = f"Forwards {distance}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"Forwards {distance}\n")
 
     def backward(self, distance: int) -> None:
-        """Moves the buggy backward by the given distance.
+        """Moves the robot backward by the given distance.
 
         Args:
             distance (int): distance between 0 and 1000 mm
@@ -80,14 +79,13 @@ class Buggy:
             raise ValueError(
                 f"Invalid distance {distance}mm. Distance must be between {MIN_DISTANCE} and {MAX_DISTANCE} mm"
             )
-        command = f"Backwards {distance}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"Backwards {distance}\n")
 
     def left(self, angle: int) -> None:
-        """Turns the buggy left by the given angle.
+        """Turns the robot left by the given angle.
 
         Args:
-            angle (int): angle between 0 and 360 degrees.
+            angle: angle between 0 and 360 degrees.
 
         Raises:
             ValueError: when angle is out of range.
@@ -96,11 +94,10 @@ class Buggy:
             raise ValueError(
                 f"Invalid angle {angle} degrees. Angle must be between {MIN_ANGLE} and {MAX_ANGLE} degrees"
             )
-        command = f"Left {angle}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"Left {angle}\n")
 
     def right(self, angle: int) -> None:
-        """Turns the buggy right by the given angle.
+        """Turns the robot right by the given angle.
 
         Args:
             angle (int): angle between 0 and 360 degrees.
@@ -112,8 +109,7 @@ class Buggy:
             raise ValueError(
                 f"Invalid angle {angle} degrees. Angle must be between {MIN_ANGLE} and {MAX_ANGLE} degrees"
             )
-        command = f"Right {angle}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"Right {angle}\n")
 
     def set_motor_speeds(self, left_speed: int, right_speed: int) -> None:
         """Independently sets the speed of the left and right motors.
@@ -134,5 +130,4 @@ class Buggy:
                 f"Invalid right_speed {right_speed}. Right speed must be between {MIN_SPEED} and {MAX_SPEED} degrees"
             )
 
-        command = f"SetMotors {left_speed} {right_speed}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"SetMotors {left_speed} {right_speed}\n")

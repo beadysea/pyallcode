@@ -15,5 +15,4 @@ class Axes:
         Returns:
             int: The value of the given axis.
         """
-        command = f"ReadAxis {axis.value}\n"
-        return self.device.send_message(command)
+        return self.device.send_message(f"ReadAxis {axis.value}\n")

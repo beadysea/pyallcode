@@ -20,9 +20,7 @@ class Servos:
         Args:
             servo (Servo): Enum of the servo to enable.
         """
-
-        command = f"ServoEnable {servo.value}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"ServoEnable {servo.value}\n")
 
     def disable(self, servo: Servo):
         """Disable the given servo motor.
@@ -30,9 +28,7 @@ class Servos:
         Args:
             servo (Servo): Enum of the servo to disable.
         """
-
-        command = f"ServoDisable {servo.value}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"ServoDisable {servo.value}\n")
 
     def set_position(self, servo: Servo, position: int):
         """Sets the given servo motor to the required position.
@@ -53,8 +49,7 @@ class Servos:
                     MAX_SERVO_POSITION=MAX_SERVO_POSITION,
                 )
             )
-        command = f"ServoSetPos {servo.value} {position}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"ServoSetPos {servo.value} {position}\n")
 
     def auto_move(self, servo: Servo, position: int):
         """Automatically moves the given servo motor to the required position.
@@ -75,8 +70,7 @@ class Servos:
                     MAX_SERVO_POSITION=MAX_SERVO_POSITION,
                 )
             )
-        command = f"ServoAutoMove {servo.value} {position}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"ServoAutoMove {servo.value} {position}\n")
 
     def set_speed(self, servo: Servo, speed: int):
         """Sets the speed of the given servo motor.
@@ -96,5 +90,4 @@ class Servos:
                     MAX_SERVO_SPEED=MAX_SERVO_SPEED,
                 )
             )
-        command = f"ServoMoveSpeed {servo.value} {speed}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"ServoMoveSpeed {servo.value} {speed}\n")

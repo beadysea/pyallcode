@@ -16,8 +16,7 @@ class LCD:
 
     def clear(self):
         """Clears the LCD screen."""
-        command = "LCDClear\n"
-        self.device.send_message(command)
+        self.device.send_message("LCDClear\n")
 
     def display_text(self, x: int, y: int, text: str):
         """Displays the given text on the LCD screen at the given x and y coordinates.
@@ -43,8 +42,7 @@ class LCD:
                 )
             )
 
-        command = f"LCDPrint {x} {y} {text}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDPrint {x} {y} {text}\n")
 
     def display_int(self, x: int, y: int, value: int):
         """Displays the given value on the LCD screen at the given x and y coordinates.
@@ -70,8 +68,7 @@ class LCD:
                 )
             )
 
-        command = f"LCDNumber {x} {y} {value}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDNumber {x} {y} {value}\n")
 
     def plot_pixel(self, x: int, y: int):
         """Plots a pixel on the LCD screen at the given x and y coordinates.
@@ -96,8 +93,7 @@ class LCD:
                 )
             )
 
-        command = f"LCDPixel {x} {y} 1\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDPixel {x} {y} 1\n")
 
     def clear_pixel(self, x: int, y: int):
         """Clears a pixel on the LCD screen at the given x and y coordinates.
@@ -122,8 +118,7 @@ class LCD:
                 )
             )
 
-        command = f"LCDPixel {x} {y} 0\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDPixel {x} {y} 0\n")
 
     def draw_line(self, x1: int, y1: int, x2: int, y2: int):
         """Draws a line on the LCD screen between two points (x1,y1) and (x2,y2).
@@ -161,8 +156,7 @@ class LCD:
                     y2=y2, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
                 )
             )
-        command = f"LCDLine {x1} {y1} {x2} {y2}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDLine {x1} {y1} {x2} {y2}\n")
 
     def draw_rectangle(self, x1: int, y1: int, x2: int, y2: int):
         """Draws a rectangle on the LCD screen between two points (x1,y1) and (x2,y2).
@@ -200,8 +194,7 @@ class LCD:
                     y2=y2, MIN_LCD_Y=MIN_LCD_Y, MAX_LCD_Y=MAX_LCD_Y
                 )
             )
-        command = f"LCDRect {x1} {y1} {x2} {y2}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDRect {x1} {y1} {x2} {y2}\n")
 
     def display_bitmap(self, x: int, y: int, filename: str) -> int:
         """Displays a bitmap on the LCD screen at the given x and y coordinates.
@@ -214,10 +207,9 @@ class LCD:
         Returns:
             int:
         """
-        command = f"CardBitmap {x} {y} {filename}\n"
-        return self.device.send_message(command)
+        return self.device.send_message(f"CardBitmap {x} {y} {filename}\n")
 
-    def backlight_brightness(self, brightness: int):
+    def backlight_brightness(self, brightness: int) -> None:
         """Sets the brightness of the LCD backlight.
 
         Args:
@@ -236,8 +228,7 @@ class LCD:
                 )
             )
 
-        command = f"LCDBacklight {brightness}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"LCDBacklight {brightness}\n")
 
     def options(self, foreground: Colour, background: Colour, transparent: bool):
         """Sets the foreground and background colour of the LCD screen.
@@ -248,7 +239,10 @@ class LCD:
             transparent (bool): Transparency of the LCD screen
         """
         if transparent:
-            command = f"LCDOptions {foreground.value} {background.value} 1\n"
+            self.device.send_message(
+                f"LCDOptions {foreground.value} {background.value} 1\n"
+            )
         else:
-            command = f"LCDOptions {foreground.value} {background.value} 0\n"
-        self.device.send_message(command)
+            self.device.send_message(
+                f"LCDOptions {foreground.value} {background.value} 0\n"
+            )

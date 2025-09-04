@@ -1,9 +1,10 @@
-import buggy, serial_comms
-from .enums import Servo
+import serial_comms as serial_comms
+from robot import Robot
+from enums import Servo
 
 
 def main():
-    car = buggy.Buggy(serial_comms.SerialDevice())
+    car = Robot(serial_comms.SerialDevice())
     print(f"API Version: {car.api_version()}")
     print(f"{car.battery_voltage()}V")
     car.forward(100)

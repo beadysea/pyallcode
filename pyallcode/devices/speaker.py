@@ -38,5 +38,4 @@ class Speaker:
                     MAX_NOTE_DURATION=MAX_NOTE_DURATION,
                 )
             )
-        command = f"PlayNote {frequency} {duration}\n"
-        self.device.send_message(command)
+        self.device.send_message(f"PlayNote {frequency} {duration}\n")

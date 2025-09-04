@@ -15,5 +15,4 @@ class LineSensors:
         Returns:
             int: the value of the line sensor.
         """
-        command = f"ReadLine {line_sensor.value}\n"
-        return self.device.send_message(command)
+        return self.device.send_message(f"ReadLine {line_sensor.value}\n")

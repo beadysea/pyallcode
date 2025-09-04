@@ -126,5 +126,4 @@ class SDCard:
         Returns:
             int: Status 0 (OK), 239 (file not found) or 255 (error)
         """
-        command = f"CardPlayBack {filename}\n"
-        return self.device.send_message(command)
+        return self.device.send_message(f"CardPlayBack {filename}\n")

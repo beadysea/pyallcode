@@ -2,7 +2,7 @@ from pyallcode.enums import Button
 from pyallcode.serial_comms import CommunicationDevice
 
 
-class Buttons:
+class PushButtons:
     def __init__(self, device: CommunicationDevice) -> None:
         self.device = device
 
@@ -15,8 +15,7 @@ class Buttons:
         Returns:
             bool: State of the given button
         """
-        command = f"ReadSwitch {button.value}\n"
-        value = self.device.send_message(command)
+        value = self.device.send_message(f"ReadSwitch {button.value}\n")
         if value == 1:
             return True
         else:

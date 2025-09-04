@@ -11,5 +11,4 @@ class LightSensor:
         Returns:
             int: the value of the light sensor.
         """
-        command = "ReadLight\n"
-        return self.device.send_message(command)
+        return self.device.send_message("ReadLight\n")
