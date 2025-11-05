@@ -13,7 +13,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
 authors = [
-  { name = "Formula AllCode contributors" }
+  { name = "Bill Crawford" }
 ]
 keywords = ["robotics", "education", "serial", "microcontroller", "formula-allcode"]
 classifiers = [
