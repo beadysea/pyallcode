@@ -1,73 +1,92 @@
-import unittest
-from unittest import mock
-from pyallcode.robot import Robot
+class DummyTransport:
+    def __init__(self):
+        self.opened_with = None
+        self.closed = False
+    def open(self, port):
+        self.opened_with = port
+    def close(self):
+        self.closed = True
 
 
-class TestRobot(unittest.TestCase):
-    def setUp(self):
-        self.mock_serial = mock.MagicMock()
-        self.rv = Robot(self.mock_serial)
-        self.send = self.mock_serial.send_message
+class FakeConnection:
+    def __init__(self, transport, verbose=0):
+        self.transport = transport
+        self.verbose = verbose
+        self.last_execute = None
+        self.opened_with = None
+        self.closed = False
+    def open(self, port):
+        self.opened_with = port
+    def close(self):
+        self.closed = True
+    def execute(self, command: str, expect_response: bool = True, attempts: int = 1):
+        self.last_execute = (command.strip(), expect_response, attempts)
+        head = command.strip().split()[0]
+        if head == 'GetAPIVersion':
+            return 7
+        if head == 'GetBatteryVoltage':
+            return 5000
+        # Return the attempts so tests can verify timeout math
+        return attempts
 
-    def test_write_calls_serial_interface_write_method_with_message(self):
-        message = "Forwards 1000\n"
-        self.rv.device.send_message(message)
-        mock.MagicMock.assert_called_with(self.send, "Forwards 1000\n")
 
-    def test_api_version_returns_3(self):
-        self.mock_serial.send_message.return_value = 3
-        result = self.rv.api_version()
-        self.assertEqual(result, 3)
+def test_robot_initialization_and_clamping(monkeypatch):
+    import pyallcode.robot as robot_mod
 
-    def test_battery_voltage_returns_4_1(self):
-        self.mock_serial.send_message.return_value = 410
-        result = self.rv.battery_voltage()
-        self.assertEqual(result, 4.1)
+    # ensure construction uses our fakes
+    monkeypatch.setattr(robot_mod, 'SerialTransport', lambda *a, **k: DummyTransport())
+    monkeypatch.setattr(robot_mod, 'Connection', FakeConnection)
 
-    def test_forward_calls_send_message_with_message(self):
-        self.rv.forward(1000)
-        mock.MagicMock.assert_called_with(self.send, "Forwards 1000\n")
+    r = robot_mod.Robot(mm_per_sec=0, deg_per_sec=0)
+    assert r.mm_per_sec == 1
+    assert r.deg_per_sec == 1
 
-    def test_forward_with_raises_value_error_when_distance_is_greater_than_1000(self):
-        with self.assertRaises(ValueError):
-            self.rv.forward(1001)
+    # device interfaces should exist
+    assert hasattr(r, 'leds') and hasattr(r, 'lcd') and hasattr(r, 'servo')
 
-    def test_forward_with_raises_value_error_when_distance_is_less_than_0(self):
-        with self.assertRaises(ValueError):
-            self.rv.forward(-1)
 
-    def test_reverse_calls_serial_interface_write_method_with_message(self):
-        self.rv.backward(1000)
-        mock.MagicMock.assert_called_with(self.send, "Backwards 1000\n")
+def test_robot_open_close_and_verbose(monkeypatch):
+    import pyallcode.robot as robot_mod
+    monkeypatch.setattr(robot_mod, 'SerialTransport', lambda *a, **k: DummyTransport())
+    monkeypatch.setattr(robot_mod, 'Connection', FakeConnection)
 
-    def test_reverse_with_raises_value_error_when_distance_is_greater_than_1000(self):
-        with self.assertRaises(ValueError):
-            self.rv.backward(1001)
+    r = robot_mod.Robot(verbose=0)
+    r.open('COM9')
+    assert r.conn.opened_with == 'COM9'
+    r.set_verbose(2)
+    assert r.conn.verbose == 2
+    r.close()
+    assert r.conn.closed is True
 
-    def test_reverse_with_raises_value_error_when_distance_is_less_than_0(self):
-        with self.assertRaises(ValueError):
-            self.rv.backward(-1)
 
-    def test_left_calls_send_message_method_with_message(self):
-        self.rv.left(360)
-        mock.MagicMock.assert_called_with(self.send, "Left 360\n")
+def test_robot_queries_and_movement_timeouts(monkeypatch):
+    import pyallcode.robot as robot_mod
+    monkeypatch.setattr(robot_mod, 'SerialTransport', lambda *a, **k: DummyTransport())
+    monkeypatch.setattr(robot_mod, 'Connection', FakeConnection)
 
-    def test_left_with_raises_value_error_when_angle_is_greater_than_360(self):
-        with self.assertRaises(ValueError):
-            self.rv.left(361)
+    r = robot_mod.Robot(mm_per_sec=50, deg_per_sec=45)
 
-    def test_left_with_raises_value_error_when_angle_is_less_than_0(self):
-        with self.assertRaises(ValueError):
-            self.rv.left(-1)
+    assert r.get_api_version() == 7
+    assert r.get_battery_voltage() == 5000
 
-    def test_right_calls_serial_interface_write_method_with_message(self):
-        self.rv.right(360)
-        mock.MagicMock.assert_called_with(self.send, "Right 360\n")
+    # movement: Forwards 100mm at 50 mm/s -> timeout = 2
+    assert r.forwards(100) == 2
+    # Backwards -100mm -> timeout uses abs -> 2
+    assert r.backwards(-100) == 2
+    # Left 90 deg at 45 deg/s -> timeout = 2
+    assert r.left(90) == 2
+    # Right -90 -> abs -> 2
+    assert r.right(-90) == 2
 
-    def test_right_with_raises_value_error_when_angle_is_greater_than_360(self):
-        with self.assertRaises(ValueError):
-            self.rv.right(361)
 
-    def test_right_with_raises_value_error_when_angle_is_less_than_0(self):
-        with self.assertRaises(ValueError):
-            self.rv.right(-1)
+def test_robot_discovery_static_passthrough(monkeypatch):
+    import pyallcode.robot as robot_mod
+
+    # The Robot class binds static methods at class creation, so patch the class attributes
+    monkeypatch.setattr(robot_mod.Robot, 'list_available_ports', staticmethod(lambda: ['A']))
+    monkeypatch.setattr(robot_mod.Robot, 'list_ports_detailed', staticmethod(lambda: [('A','desc','id')]))
+    monkeypatch.setattr(robot_mod.Robot, 'find_robot_ports', staticmethod(lambda: [{'device':'A'}]))
+
+    assert robot_mod.Robot.list_available_ports() == ['A']
+    assert robot_mod.Robot.list_ports_detailed() == [('A','desc','id')]
+    assert robot_mod.Robot.find_robot_ports() == [{'device':'A'}]

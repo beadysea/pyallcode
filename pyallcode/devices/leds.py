@@ -1,68 +1,35 @@
-from pyallcode.serial_comms import CommunicationDevice
+"""Module for interacting with the device's LEDs."""
+from ..comm.connection import Connection
+from .base import DeviceBase
 
-MIN_LED = 0
-MIN_LED_VALUE = 0
-MAX_LED = 7
-MAX_LED_VALUE = 255
+class LEDs(DeviceBase):
+    """Represents the device's LEDs.
 
+    Args:
+        conn (Connection): The connection to the device.
+    """
 
-class LEDs:
-    def __init__(self, device: CommunicationDevice) -> None:
-        self.device = device
+    def __init__(self, conn: Connection | None = None, port: str | int | None = None, autoconn: bool = True, verbose: int = 0) -> None:
+        """Initializes the LEDs with an existing or self-managed connection."""
+        super().__init__(conn=conn, port=port, autoconn=autoconn, verbose=verbose)
 
-    def write(self, value: int):
-        """Writes the given value to the LEDs
-
+    def write(self, value: int) -> None:
+        """Writes a value to the LEDs.
         Args:
-            value (int): Value to write to the LEDs between 0 and 255
-
-        Raises:
-            ValueError: when value is out of range.
+            value (int): The value to write (0-255).
         """
-        if value not in range(MIN_LED_VALUE, MAX_LED_VALUE + 1):
-            raise ValueError(
-                "Invalid value {value}. The value must be in the range {MIN_LED_VALUE} to {MAX_LED_VALUE}.".format(
-                    value=value,
-                    MIN_LED_VALUE=MIN_LED_VALUE,
-                    MAX_LED_VALUE=MAX_LED_VALUE,
-                )
-            )
-        self.device.send_message(f"LEDWrite {value}")
+        self.conn.execute(f'LEDWrite {int(value)}', expect_response=False)
 
-    def on(self, led: int):
-        """Switches the given LED on.
-
+    def on(self, index: int) -> None:
+        """Turns on the specified LED.
         Args:
-            led (int): The LED number between 0 and 7
-
-        Raises:
-            ValueError: when the LED number is out of range.
+            index (int): The index of the LED to turn on.
         """
-        if led not in range(MIN_LED, MAX_LED + 1):
-            raise ValueError(
-                "Invalid led value {led}. Led value must be in the range {MIN_LED} to {MAX_LED}.".format(
-                    led=led,
-                    MIN_LED=MIN_LED,
-                    MAX_LED=MAX_LED,
-                )
-            )
-        self.device.send_message(f"LEDOn {led}")
+        self.conn.execute(f'LEDOn {int(index)}', expect_response=False)
 
-    def off(self, led: int):
-        """Switches the given LED off.
-
+    def off(self, index: int) -> None:
+        """Turns off the specified LED.
         Args:
-            led (int): The LED number between 0 and 7
-
-        Raises:
-            ValueError: when the LED number is out of range.
+            index (int): The index of the LED to turn off.
         """
-        if led not in range(MIN_LED, MAX_LED + 1):
-            raise ValueError(
-                "Invalid led value {led}. Led value must be in the range {MIN_LED} to {MAX_LED}.".format(
-                    led=led,
-                    MIN_LED=MIN_LED,
-                    MAX_LED=MAX_LED,
-                )
-            )
-        self.device.send_message(f"LEDOff {led}")
+        self.conn.execute(f'LEDOff {int(index)}', expect_response=False)

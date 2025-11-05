@@ -1,41 +1,23 @@
-from pyallcode.serial_comms import CommunicationDevice
+""""Speaker device module."""
+import time
+from ..comm.connection import Connection
+from .base import DeviceBase
 
-MIN_NOTE_DURATION = 1
-MAX_NOTE_DURATION = 10000
-MIN_FREQUENCY = 1
-MAX_FREQUENCY = 10000
+class Speaker(DeviceBase):
+    """Represents the speaker device.
+    Args:
+        conn (Connection): The connection to the device.
+    """
 
+    def __init__(self, conn: Connection | None = None, port: str | int | None = None, autoconn: bool = True, verbose: int = 0) -> None:
+        """Initializes the Speaker with an existing or self-managed connection."""
+        super().__init__(conn=conn, port=port, autoconn=autoconn, verbose=verbose)
 
-class Speaker:
-    def __init__(self, device: CommunicationDevice) -> None:
-        self.device = device
-
-    def play_note(self, frequency: int, duration: int):
-        """Plays a note at the given frequency for the given time.
-
+    def play_note(self, note: int, length_ms: int) -> None:
+        """Plays a note on the speaker.
         Args:
-            frequency (int): frequency of the note between 1 and 10000 Hz.
-            time (int): duration of the note between 1 and 10000 milliseconds
-
-        Raises:
-            ValueError: when the frequency or duration is out of range.
+            note (int): The note to play.
+            length_ms (int): The duration of the note in milliseconds.
         """
-        if frequency not in range(MIN_FREQUENCY, MAX_FREQUENCY * 1):
-            raise ValueError(
-                "Invalid fequency {frequency}Hz. "
-                "The frequency must be in the range {MIN_FREQUENCY} to {MAX_FREQUENCY} Hertz.".format(
-                    frequency=frequency,
-                    MIN_FREQUENCY=MIN_FREQUENCY,
-                    MAX_FREQUENCY=MAX_FREQUENCY,
-                )
-            )
-        if duration not in range(MIN_NOTE_DURATION, MAX_NOTE_DURATION + 1):
-            raise ValueError(
-                "Invalid note duration {duration}ms. "
-                "Note duration must be in the range {MIN_NOTE_DURATION} to {MAX_NOTE_DURATION} milliseconds.".format(
-                    duration=duration,
-                    MIN_NOTE_DURATION=MIN_NOTE_DURATION,
-                    MAX_NOTE_DURATION=MAX_NOTE_DURATION,
-                )
-            )
-        self.device.send_message(f"PlayNote {frequency} {duration}\n")
+        self.conn.execute(f'PlayNote {int(note)} {int(length_ms)}', expect_response=False)
+        time.sleep(max(0, length_ms) / 1000.0)

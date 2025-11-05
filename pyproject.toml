@@ -1,44 +1,65 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = [
+    "setuptools>=69.0",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-packages = ["allcode"]
 
 [project]
 name = "pyallcode"
-version = "0.0.3"
-license = {file="LICENSE"}
-requires-python = ">-3.8"
-dependencies = [
-    "pyserial >=3.5",
-]
-authors = [
-    { name="Bill Crawford", email="bill.crawford@forthvalley.ac.uk"}
-]
-maintainers = [
-    { name="Bill Crawford", email="bill.crawford@forthvalley.ac.uk"}
-]
-description = "Object orientated python API for MatrixTSL Allcode."
+version = "0.1.0"
+description = "A refactored, testable Python API for the Formula AllCode robot"
 readme = "README.md"
-
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+  { name = "Formula AllCode contributors" }
+]
+keywords = ["robotics", "education", "serial", "microcontroller", "formula-allcode"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Education",
-    "Intended Audience :: Students",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Operating System :: OS Independent",
-     "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Education",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Topic :: Education",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: System :: Hardware",
 ]
-keywords = [
-    "MatrixTSL",
-    "Allcode",
-    "API",
-    "Python",
-    "Serial",
-    "Communication",
+dependencies = [
+  "pyserial>=3.5",
 ]
+license-files = ["LICENSE"]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-cov>=4.0",
+  "build>=1.0",
+  "twine>=5.0",
+  "sphinx>=7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/beads/py_allcode"
+Documentation = "https://github.com/beads/py_allcode/tree/main/docs"
+Source = "https://github.com/beads/py_allcode"
+Issues = "https://github.com/beads/py_allcode/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+
+[tool.setuptools.packages.find]
+include = ["pyallcode", "pyallcode.*"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --showlocals --strict-markers --disable-warnings"
+testpaths = ["tests"]

@@ -1,93 +1,50 @@
-from pyallcode.enums import Servo
-from pyallcode.serial_comms import CommunicationDevice
+"""Module for interacting with the servo motors."""
+from ..comm.connection import Connection
+from .base import DeviceBase
 
+class Servos(DeviceBase):
+    """Represents the servo motors.
+    Args:
+        conn (Connection): The connection to the device.
+    """
+    def __init__(self, conn: Connection | None = None, port: str | int | None = None, autoconn: bool = True, verbose: int = 0) -> None:
+        """Initializes the Servos with an existing or self-managed connection."""
+        super().__init__(conn=conn, port=port, autoconn=autoconn, verbose=verbose)
 
-MIN_SERVO = 0
-MIN_SERVO_POSITION = 0
-MIN_SERVO_SPEED = 0
-MAX_SERVO = 2
-MAX_SERVO_POSITION = 255
-MAX_SERVO_SPEED = 50
-
-
-class Servos:
-    def __init__(self, device: CommunicationDevice) -> None:
-        self.device = device
-
-    def enable(self, servo: Servo):
-        """Enables the given servo motor.
-
+    def enable(self, index: int) -> None:
+        """Enable the specified servo motor.
+        
         Args:
-            servo (Servo): Enum of the servo to enable.
+            index (int): The index of the servo motor to enable.
         """
-        self.device.send_message(f"ServoEnable {servo.value}\n")
+        self.conn.execute(f'ServoEnable {int(index)}', expect_response=False)
 
-    def disable(self, servo: Servo):
-        """Disable the given servo motor.
-
+    def disable(self, index: int) -> None:
+        """Disable the specified servo motor.
         Args:
-            servo (Servo): Enum of the servo to disable.
+            index (int): The index of the servo motor to disable.
         """
-        self.device.send_message(f"ServoDisable {servo.value}\n")
+        self.conn.execute(f'ServoDisable {int(index)}', expect_response=False)
 
-    def set_position(self, servo: Servo, position: int):
-        """Sets the given servo motor to the required position.
-
+    def set_pos(self, index: int, position: int) -> None:
+        """Set the position of the specified servo motor.
         Args:
-            servo (Servo): Enum of the servo motor.
-            position (int): the position of the servo between 0 and 255
-
-        Raises:
-            ValueError: when the servo position is out of range.
+            index (int): The index of the servo motor to set.
+            position (int): The position to set the servo motor to.
         """
-        if position not in range(MIN_SERVO_POSITION, MAX_SERVO_POSITION + 1):
-            raise ValueError(
-                "Invalid position {position}. "
-                "Position must be in the range {MIN_SERVO_POSITION} to {MAX_SERVO_POSITION}.".format(
-                    position=position,
-                    MIN_SERVO_POSITION=MIN_SERVO_POSITION,
-                    MAX_SERVO_POSITION=MAX_SERVO_POSITION,
-                )
-            )
-        self.device.send_message(f"ServoSetPos {servo.value} {position}\n")
+        self.conn.execute(f'ServoSetPos {int(index)} {int(position)}', expect_response=False)
 
-    def auto_move(self, servo: Servo, position: int):
-        """Automatically moves the given servo motor to the required position.
-
+    def auto_move(self, index: int, position: int) -> None:
+        """Move the specified servo motor to the desired position automatically.
         Args:
-            servo (Servo): Enum of the servo motor.
-            position (int): the position of the servo between 0 and 255
-
-        Raises:
-            ValueError: when the servo position is out of range.
+            index (int): The index of the servo motor to move.
+            position (int): The position to move the servo motor to.
         """
-        if position not in range(MIN_SERVO_POSITION, MAX_SERVO_POSITION + 1):
-            raise ValueError(
-                "Invalid position {position}. "
-                "Position must be in the range {MIN_SERVO_POSITION} to {MAX_SERVO_POSITION}.".format(
-                    position=position,
-                    MIN_SERVO_POSITION=MIN_SERVO_POSITION,
-                    MAX_SERVO_POSITION=MAX_SERVO_POSITION,
-                )
-            )
-        self.device.send_message(f"ServoAutoMove {servo.value} {position}\n")
+        self.conn.execute(f'ServoAutoMove {int(index)} {int(position)}', expect_response=False)
 
-    def set_speed(self, servo: Servo, speed: int):
-        """Sets the speed of the given servo motor.
-
+    def move_speed(self, speed: int) -> None:
+        """Set the speed of the specified servo motor.
         Args:
-            servo (Servo): Enum of the servo motor
-            speed (int): the speed of the servo between 0 and 50
-
-        Raises:
-            ValueError: _description_
+            speed (int): The speed to set the servo motor to.
         """
-        if speed not in range(MIN_SERVO_SPEED, MAX_SERVO_SPEED + 1):
-            raise ValueError(
-                "Invalid speed {speed}. Speed must be in the range {MIN_SERVO_SPEED} to {MAX_SERVO_SPEED}.".format(
-                    speed=speed,
-                    MIN_SERVO_SPEED=MIN_SERVO_SPEED,
-                    MAX_SERVO_SPEED=MAX_SERVO_SPEED,
-                )
-            )
-        self.device.send_message(f"ServoMoveSpeed {servo.value} {speed}\n")
+        self.conn.execute(f'ServoMoveSpeed {int(speed)}', expect_response=False)

@@ -1,14 +1,24 @@
-from pyallcode.serial_comms import CommunicationDevice
+"""Module for interacting with the microphone level sensor."""
+from ..comm.connection import Connection
+from .base import DeviceBase
 
 
-class Mic:
-    def __init__(self, device: CommunicationDevice) -> None:
-        self.device = device
+class Mic(DeviceBase):
+    """Represents the microphone level sensor.
+    
 
-    def read_level(self) -> int:
-        """Reads the value of the microphone
+    Attributes:
+        conn (Connection): The connection to the robot.
+    """
+
+    def __init__(self, conn: Connection | None = None, port: str | int | None = None, autoconn: bool = True, verbose: int = 0) -> None:
+        """Initializes the Mic sensor with an existing or self-managed connection."""
+        super().__init__(conn=conn, port=port, autoconn=autoconn, verbose=verbose)
+
+    def read(self) -> int:
+        """Reads the microphone level.
 
         Returns:
-            int: the value of the microphone.
+            int: The microphone level (0-100) or -1 on error.
         """
-        return self.device.send_message("ReadMic\n")
+        return int(self.conn.execute('ReadMic') or -1)

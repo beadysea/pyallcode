@@ -1,0 +1,2 @@
+# Runtime dependencies for pyallcode
+pyserial>=3.5
